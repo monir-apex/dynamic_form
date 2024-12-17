@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_form/global_api/global_api_request.dart';
 import 'package:test_form/icons/flutterIcons.dart';
 
 import 'dynamic_form.dart';
@@ -15,22 +16,36 @@ class DynamicFormTest extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("dkfjds"),),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Map reqData = {};
-          if(formKey.currentState!.validate()){
-            for(var data in modelData){
-              if(data is List<DynamicFormModel>){
-                for(var va in data){
-                  reqData[va.keyName]=va.value;
-                }
-              }else{
-                print(data.keyName);
-                print(data.value);
-                reqData[data.keyName]=data.value;
+        onPressed: ()async{
+          final api = GlobalApiRequest();
+          final response = await api.apiRequest(
+            type: RequestType.get,
+            url: 'https://jsonplaceholder.typicode.com/users/2',
+            fromJson: null,
+          );
+          response.fold(
+              (left){
+                print("Failed");
+              },
+              (right){
+                print("Success");
               }
-            }
-            print(reqData);
-          }
+          );
+          // Map reqData = {};
+          // if(formKey.currentState!.validate()){
+          //   for(var data in modelData){
+          //     if(data is List<DynamicFormModel>){
+          //       for(var va in data){
+          //         reqData[va.keyName]=va.value;
+          //       }
+          //     }else{
+          //       print(data.keyName);
+          //       print(data.value);
+          //       reqData[data.keyName]=data.value;
+          //     }
+          //   }
+          //   print(reqData);
+          // }
         },
       ),
       body: Padding(
